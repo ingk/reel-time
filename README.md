@@ -21,6 +21,7 @@ Suggestions and contributions are welcome! I'm happy to receive feature requests
 Dependencies:
 * [Elm `0.19`](https://guide.elm-lang.org/install.html)
 * [Node](https://nodejs.org/en/download/) (developed with Node `10.8.0` and npm `6.4.0`)
+* [Volta](https://volta.sh) (optional)
 
 To run locally:
 ```

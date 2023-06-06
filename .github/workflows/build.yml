@@ -1,0 +1,47 @@
+name: Build
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+env:
+  ELM_VERSION: 0.19.1
+  NODE_VERSION: 10.8.0
+  NPM_VERSION: 6.4.0
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set version variables
+      id: versions
+      run: |
+        echo "node_version=$NODE_VERSION" >> $GITHUB_OUTPUT
+        echo "npm_version=$NPM_VERSION" >> $GITHUB_OUTPUT
+
+    - name: Install elm
+      run: |
+        curl -L -o elm.gz https://github.com/elm/compiler/releases/download/$ELM_VERSION/binary-for-linux-64-bit.gz
+        gunzip elm.gz
+        chmod +x elm
+        sudo mv elm /usr/local/bin/
+    
+    - name: Install volta (node version manager)
+      uses: volta-cli/action@v4
+      with:
+        node-version: ${{ steps.versions.output.node_version }}
+        npm-version: ${{ steps.versions.output.npm_version }}
+
+    - name: Install dependencies
+      run: |
+        npm install
+        sudo npm install create-elm-app -g
+
+    - name: Build project
+      run: elm-app build
